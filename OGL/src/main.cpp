@@ -87,22 +87,17 @@ int main(void)
 	{
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-		// Initialize the camera
-		camera.MovementSpeed = 25.0f;
 
 		//glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200.0f, 0.0, 0.0f));
 
 		//Its calculated in reverse order/or from right to left due to how its laid out in memory.
 		//glm::mat4 mvp = proj * view * model;
-
-		Shader shader("BasicShader.shader");
-		shader.Bind();
-		Renderer renderer;
-
-		Texture texture("res/container.jpg");
-		texture.Bind();
-		shader.Setuniform1i("u_Texture", 0);
 		//shader.SetUniformMat4f("u_MVP", mvp);
+
+		// Initialize the camera
+		camera.MovementSpeed = 25.0f;
+
+		Renderer renderer;
 
 		Cube cube[] = {
 			{glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
@@ -155,9 +150,6 @@ int main(void)
 			/* Poll for and process events */
 			glfwPollEvents();
 		}
-
-		// Cleanup
-		shader.Unbind();
 	}
 	glfwTerminate();
 	return 0;

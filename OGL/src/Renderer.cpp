@@ -30,6 +30,6 @@ void Renderer::Draw(const VertexArray& vao, const ElementBuffer& ebo, const Shad
 
 void Renderer::Clear()
 {
-	GlCall(glClearColor(1.0f, 0.5f, 0.2f, 1.0f));
+	GlCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
 	GlCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }

@@ -55,7 +55,7 @@ unsigned int indices[] = {
 	22, 23, 20
 };
 
-Cube::Cube(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale) : position(pos), rotation(rot), scale(scale), vb(positions, sizeof(positions)), ebo(indices, sizeof(indices)), shader("BasicShader.shader"), texture("res/container.jpg")
+Cube::Cube(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale) : position(pos), rotation(rot), scale(scale), vb(positions, sizeof(positions)), ebo(indices, sizeof(indices)), shader("Shaders/BasicShader.shader"), texture("res/container.jpg")
 {
 	VertexBufferLayout layout; 
 	layout.Push<float>(3); // Positions 
@@ -79,6 +79,7 @@ void Cube::Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view
 	model = glm::translate(model, position); 
 	model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f)); 
 	model = glm::scale(model, scale); 
+	shader.Bind();
 	shader.SetUniformMat4f("projection", proj); 
 	shader.SetUniformMat4f("view", view); 
 	shader.SetUniformMat4f("model", model); 

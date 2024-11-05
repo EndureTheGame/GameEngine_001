@@ -1,37 +1,37 @@
-#include "LightSource.h"
+#include "LightSource.h" 
 
 float tempPositions[] = {
 	// Positions			 // Colors         // Texture Coords
 	// Front face
-	-50.0f, -50.0f,  50.0f,
-	 50.0f, -50.0f,  50.0f,
-	 50.0f,  50.0f,  50.0f,
-	-50.0f,  50.0f,  50.0f,
+	-50.0f, -50.0f,  50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
+	 50.0f, -50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
+	 50.0f,  50.0f,  50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,
+	-50.0f,  50.0f,  50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,
 	// Back face
-	-50.0f, -50.0f, -50.0f,
-	 50.0f, -50.0f, -50.0f,
-	 50.0f,  50.0f, -50.0f,
-	-50.0f,  50.0f, -50.0f,
+	-50.0f, -50.0f, -50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
+	 50.0f, -50.0f, -50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
+	 50.0f,  50.0f, -50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,
+	-50.0f,  50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,
 	// Left face
-	-50.0f, -50.0f, -50.0f,
-	-50.0f, -50.0f,  50.0f,
-	-50.0f,  50.0f,  50.0f,
-	-50.0f,  50.0f, -50.0f,
+	-50.0f, -50.0f, -50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
+	-50.0f, -50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
+	-50.0f,  50.0f,  50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,
+	-50.0f,  50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,
 	// Right face
-	 50.0f, -50.0f, -50.0f,
-	 50.0f, -50.0f,  50.0f,
-	 50.0f,  50.0f,  50.0f,
-	 50.0f,  50.0f, -50.0f,
+	 50.0f, -50.0f, -50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
+	 50.0f, -50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
+	 50.0f,  50.0f,  50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,
+	 50.0f,  50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,
 	 // Top face
-	-50.0f,  50.0f,  50.0f,
-	 50.0f,  50.0f,  50.0f,
-	 50.0f,  50.0f, -50.0f,
-	-50.0f,  50.0f, -50.0f,
+	-50.0f,  50.0f,  50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
+	 50.0f,  50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
+	 50.0f,  50.0f, -50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,
+	-50.0f,  50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,
 	// Bottom face
-   -50.0f, -50.0f,  50.0f, 
-	50.0f, -50.0f,  50.0f, 
-	50.0f, -50.0f, -50.0f, 
-   -50.0f, -50.0f, -50.0f 
+   -50.0f, -50.0f,  50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
+	50.0f, -50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
+	50.0f, -50.0f, -50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,
+   -50.0f, -50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f
 };
 
 unsigned int tempIndices[] = {
@@ -55,14 +55,15 @@ unsigned int tempIndices[] = {
 	22, 23, 20
 };
 
-LightSource::LightSource(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale) : position(pos), rotation(rot), scale(scale), vb(tempPositions, sizeof(tempPositions)), ebo(tempIndices, sizeof(tempIndices)), shader("LightSource.shader")
+LightSource::LightSource(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale) : position(pos), rotation(rot), scale(scale), vb(tempPositions, sizeof(tempPositions)), ebo(tempIndices, sizeof(tempIndices)), shader("Shaders/LightSource.shader")
 {
-	VertexBufferLayout layout;
+	VertexBufferLayout layout; 
 	layout.Push<float>(3); // Positions 
-	va.addBuffer(vb, layout);
+	layout.Push<float>(4); // Colors 
+	layout.Push<float>(2); // Texture Coords 
+	va.addBuffer(vb, layout); 
 	shader.Bind();
 }
-
 LightSource::~LightSource()
 {
 	va.Undbind();
@@ -70,36 +71,35 @@ LightSource::~LightSource()
 	ebo.Unbind();
 	shader.Unbind();
 }
-
 void LightSource::Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view)
-{
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, position);
-	model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-	model = glm::scale(model, scale);
+{ 
+	glm::mat4 model = glm::mat4(1.0f); 
+	model = glm::translate(model, position); 
+	model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f)); 
+	model = glm::scale(model, scale); 
 
 	shader.Bind();
-	shader.SetUniformMat4f("projection", proj);
-	shader.SetUniformMat4f("view", view);
-	shader.SetUniformMat4f("model", model);
-
-	va.Bind();
-	ebo.Bind();
-	GlCall(glDrawElements(GL_TRIANGLES, ebo.GetCount(), GL_UNSIGNED_INT, nullptr));
+	shader.SetUniformMat4f("projection", proj); 
+	shader.SetUniformMat4f("view", view); 
+	shader.SetUniformMat4f("model", model); 
+	//shader.Setuniform4f("u_Color", 1.0f, 1.0f, 1.0f, 1.0f);
+	renderer.Draw(va, ebo, shader);
 }
-
 void LightSource::Update()
 {
 }
 
 void LightSource::SetPosition(const glm::vec3& pos)
 {
+	position = pos;
 }
 
 void LightSource::SetRotation(const glm::vec3& rot)
 {
+	rotation = rot;
 }
 
 void LightSource::SetScale(const glm::vec3& scale)
 {
+	this->scale = scale;
 }

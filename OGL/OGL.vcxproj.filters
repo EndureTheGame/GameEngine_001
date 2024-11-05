@@ -993,7 +993,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="BasicShader.shader" />
+    <None Include="Shaders\BasicShader.shader" />
     <None Include="src\vendor\glm\doc\api\search\all_0.html" />
     <None Include="src\vendor\glm\doc\api\search\all_1.html" />
     <None Include="src\vendor\glm\doc\api\search\all_2.html" />
@@ -2098,6 +2098,6 @@
     <None Include="src\vendor\glm\glm\gtx\wrap.inl">
       <Filter>Header Files</Filter>
     </None>
-    <None Include="LightSource.shader" />
+    <None Include="Shaders\LightSource.shader" />
   </ItemGroup>
 </Project>

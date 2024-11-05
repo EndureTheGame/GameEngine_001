@@ -5,9 +5,12 @@
 
 Shader::Shader(const std::string& filepath) : m_FilePath(filepath), m_RendererID(0)
 {
+	std::cout << "Loading shader from path: " << filepath << std::endl;
 	ShaderProgramSource source = ParseShader(filepath);
 	m_RendererID = CreateShader(source.VertexShader, source.FragmentShader);
+	std::cout << "Shader compiled and linked successfully. ID: " << m_RendererID << std::endl;
 }
+
 
 Shader::~Shader()
 {
@@ -74,8 +77,15 @@ void Shader::Setuniform4f(const std::string& name, float v0, float v1, float v2,
 
 void Shader::SetUniformMat4f(const std::string& name, const glm::mat4& matrix)
 {
-	GlCall(glUniformMatrix4fv(GetUniformLocation(name), 1, false, &matrix[0][0]));
+	int location = GetUniformLocation(name);
+	if (location == -1) {
+		std::cout << "Warning: Uniform '" << name << "' not found or not used." << std::endl;
+		return;  // Avoid calling glUniformMatrix4fv with an invalid location
+	}
+	std::cout << "Setting uniform '" << name << "' at location " << location << std::endl;
+	GlCall(glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]));
 }
+
 
 unsigned int Shader::CompileShader(unsigned int type, const std::string& source)
 {
@@ -127,10 +137,14 @@ int Shader::GetUniformLocation(const std::string& name)
 		return m_UniformLocationCache[name];
 
 	GlCall(int location = glGetUniformLocation(m_RendererID, name.c_str()));
-
-	if (location == -1)
-		std::cout << "Uniform does not exist:  " << name << std::endl;
+	if (location == -1) {
+		std::cout << "Warning: Uniform '" << name << "' does not exist!" << std::endl;
+	}
+	else {
+		std::cout << "Uniform '" << name << "' retrieved with location: " << location << std::endl;
+	}
 
 	m_UniformLocationCache[name] = location;
 	return location;
 }
+
