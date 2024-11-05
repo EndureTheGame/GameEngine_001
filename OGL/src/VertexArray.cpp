@@ -11,7 +11,7 @@ VertexArray::~VertexArray()
 	GlCall(glGenVertexArrays(1, &m_RendererID));
 }
 
-void VertexArray::addBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout)
+void VertexArray::addBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout) const
 {
 	Bind();
 	vb.Bind();

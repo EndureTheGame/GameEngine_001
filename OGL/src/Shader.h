@@ -7,9 +7,6 @@
 
 #include <unordered_map>
 
-
-
-#include "Shader.h"
 #include <glm/ext/matrix_float4x4.hpp>
 
 
@@ -28,6 +25,7 @@ private:
 	std::unordered_map<std::string, int> m_UniformLocationCache;
 
 	public:
+
 		Shader(const std::string& filepath);
 		~Shader();
 
