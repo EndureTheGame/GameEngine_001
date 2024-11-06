@@ -2,36 +2,36 @@
 
 float positions[] = {
 	// Positions			 // Colors         // Texture Coords
-	// Front face
-	-50.0f, -50.0f,  50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
-	 50.0f, -50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
-	 50.0f,  50.0f,  50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,
-	-50.0f,  50.0f,  50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,
+	// Front face 
+	-50.0f, -50.0f,  50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,  0.0f,  0.0f, -1.0f,
+	 50.0f, -50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  0.0f,  0.0f, -1.0f,
+	 50.0f,  50.0f,  50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,  0.0f,  0.0f, -1.0f,
+	-50.0f,  50.0f,  50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,  0.0f,  0.0f, -1.0f,
 	// Back face
-	-50.0f, -50.0f, -50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
-	 50.0f, -50.0f, -50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
-	 50.0f,  50.0f, -50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,
-	-50.0f,  50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,
+	-50.0f, -50.0f, -50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,  0.0f,  0.0f,  1.0f,
+	 50.0f, -50.0f, -50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  0.0f,  0.0f,  1.0f,
+	 50.0f,  50.0f, -50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,  0.0f,  0.0f,  1.0f,
+	-50.0f,  50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,  0.0f,  0.0f,  1.0f,
 	// Left face
-	-50.0f, -50.0f, -50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
-	-50.0f, -50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
-	-50.0f,  50.0f,  50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,
-	-50.0f,  50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,
+	-50.0f, -50.0f, -50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+	-50.0f, -50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+	-50.0f,  50.0f,  50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+	-50.0f,  50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
 	// Right face
-	 50.0f, -50.0f, -50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
-	 50.0f, -50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
-	 50.0f,  50.0f,  50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,
-	 50.0f,  50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,
+	 50.0f, -50.0f, -50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,  1.0f,  0.0f,  0.0f,
+	 50.0f, -50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  1.0f,  0.0f,  0.0f,
+	 50.0f,  50.0f,  50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,  1.0f,  0.0f,  0.0f,
+	 50.0f,  50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,  1.0f,  0.0f,  0.0f,
 	 // Top face
-	-50.0f,  50.0f,  50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
-	 50.0f,  50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
-	 50.0f,  50.0f, -50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,
-	-50.0f,  50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,
+	-50.0f,  50.0f,  50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,  0.0f,  1.0f,  0.0f,
+	 50.0f,  50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  0.0f,  1.0f,  0.0f,
+	 50.0f,  50.0f, -50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,  0.0f,  1.0f,  0.0f,
+	-50.0f,  50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,  0.0f,  1.0f,  0.0f,
 	// Bottom face
-   -50.0f, -50.0f,  50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,
-	50.0f, -50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,
-	50.0f, -50.0f, -50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,
-   -50.0f, -50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f
+   -50.0f, -50.0f,  50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,  0.0f, -1.0f,  0.0f,
+	50.0f, -50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  0.0f, -1.0f,  0.0f,
+	50.0f, -50.0f, -50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,  0.0f, -1.0f,  0.0f,
+   -50.0f, -50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,  0.0f, -1.0f,  0.0f
 };
 
 unsigned int indices[] = {
@@ -61,6 +61,7 @@ Cube::Cube(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale) :
 	layout.Push<float>(3); // Positions 
 	layout.Push<float>(4); // Colors 
 	layout.Push<float>(2); // Texture Coords 
+	layout.Push<float>(3); // Normals
 	va.addBuffer(vb, layout); 
 	texture.Bind(); 
 	shader.Bind();
@@ -73,18 +74,21 @@ Cube::~Cube()
 	shader.Unbind();
 	texture.Unbind();
 }
-void Cube::Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view) 
+void Cube::Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view, const glm::vec3& lightPos, const glm::vec3& viewPos)
 { 
 	glm::mat4 model = glm::mat4(1.0f); 
 	model = glm::translate(model, position); 
 	model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f)); 
 	model = glm::scale(model, scale); 
 	shader.Bind();
+	texture.Bind();
 	shader.SetUniformMat4f("projection", proj); 
 	shader.SetUniformMat4f("view", view); 
 	shader.SetUniformMat4f("model", model); 
+	shader.Setuniform3f("lightPos", lightPos.x, lightPos.y, lightPos.z);
+	shader.Setuniform3f("viewPos", viewPos.x, viewPos.y, viewPos.z);
+	shader.Setuniform3f("lightColor" , 1.0f, 1.0f, 1.0f);
 	shader.Setuniform4f("u_Color", 1.0f, 1.0f, 1.0f, 1.0f);
-	texture.Bind();
 	renderer.Draw(va, ebo, shader);
 }
 void Cube::Update()

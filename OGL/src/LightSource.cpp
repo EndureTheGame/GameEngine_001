@@ -103,3 +103,19 @@ void LightSource::SetScale(const glm::vec3& scale)
 {
 	this->scale = scale;
 }
+
+glm::vec3 LightSource::GetPosition() const
+{
+	return position;
+}
+
+glm::vec3 LightSource::GetRotation() const
+{
+	return rotation;
+}
+
+glm::vec3 LightSource::GetScale() const
+{
+	return	scale;
+}
+

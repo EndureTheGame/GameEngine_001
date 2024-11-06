@@ -21,7 +21,7 @@ class Cube
 	public: 
 		Cube(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale); 
 		~Cube();
-		void Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view); 
+		void Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view, const glm::vec3& lightPos, const glm::vec3& viewPos);
 		void Update(); 
 
 		//Setters 

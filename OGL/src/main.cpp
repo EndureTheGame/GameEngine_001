@@ -103,7 +103,7 @@ int main(void)
 			{glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
 			{glm::vec3(300.0f, 50.0f, -150.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)}
 		};
-		LightSource lightSource(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+		LightSource lightSource(glm::vec3(110.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 
 		/* Loop until the user closes the window */
@@ -136,10 +136,10 @@ int main(void)
 			for (auto& c : cube)
 			{
 
-				c.SetRotation(glm::vec3(timeValue * 50.0f, timeValue * 20.0f, 0.0f));
+				//c.SetRotation(glm::vec3(timeValue * 50.0f, timeValue * 20.0f, 0.0f));
 
-				c.Update();
-				c.Draw(renderer, proj, view);
+				//c.Update();
+				c.Draw(renderer, proj, view, lightSource.GetPosition(), camera.Position);
 
 			}
 			lightSource.Draw(renderer, proj, view);

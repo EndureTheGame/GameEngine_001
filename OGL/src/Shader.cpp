@@ -69,6 +69,10 @@ void Shader::Setuniform1f(const std::string& name, float value)
 {
 	GlCall(glUniform1f(GetUniformLocation(name), value));
 }
+void Shader::Setuniform3f(const std::string& name, float v0, float v1, float v2)
+{
+	GlCall(glUniform3f(GetUniformLocation(name), v0, v1, v2));
+}
 
 void Shader::Setuniform4f(const std::string& name, float v0, float v1, float v2, float v3)
 {
