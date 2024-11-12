@@ -15,6 +15,10 @@
 #include "Cube.h"
 #include "LightSource.h"
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
 #include "glm/glm.hpp"
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
@@ -82,6 +86,34 @@ int main(void)
 
 	std::cout << glGetString(GL_VERSION) << std::endl;
 
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
+
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
+	io.ConfigViewportsNoAutoMerge = true;
+	io.ConfigViewportsNoTaskBarIcon = true;
+
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+	//ImGui::StyleColorsLight();
+
+	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+	ImGuiStyle& style = ImGui::GetStyle();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
+
+	// Setup Platform/Renderer backends
+	ImGui_ImplGlfw_InitForOpenGL(window, true);          // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
+	ImGui_ImplOpenGL3_Init();
+
 	// Enable depth testing
 	glEnable(GL_DEPTH_TEST);
 	{
@@ -103,12 +135,16 @@ int main(void)
 			{glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
 			{glm::vec3(300.0f, 50.0f, -150.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)}
 		};
-		LightSource lightSource(glm::vec3(110.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+		LightSource lightSource(glm::vec3(110.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.25));
 
 
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(window))
 		{
+
+			/* Poll for and process events */
+			glfwPollEvents();
+
 			/* Process input */
 			float currentFrame = glfwGetTime();
 			deltaTime = currentFrame - lastFrame;
@@ -125,8 +161,6 @@ int main(void)
 			float redValue = (sin(timeValue) / 1.0f * cos(timeValue / 2)) + 0.5f;
 			float BlueValue = (cos(timeValue) / 1.65f) + 0.5f;
 
-
-
 			//shader.Setuniform1i("u_Texture", 0);
 			const float radius = 100.0f;
 			float camX = sin(glfwGetTime()) * radius;
@@ -135,22 +169,41 @@ int main(void)
 			glm::mat4 view = camera.GetViewMatrix();
 			for (auto& c : cube)
 			{
-
 				//c.SetRotation(glm::vec3(timeValue * 50.0f, timeValue * 20.0f, 0.0f));
-
 				//c.Update();
 				c.Draw(renderer, proj, view, lightSource.GetPosition(), camera.Position);
-
 			}
 			lightSource.Draw(renderer, proj, view);
+
+			// Start the Dear ImGui frame
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
+			ImGui::ShowDemoWindow(); // Show demo window! :)
+
+			ImGui::Render();
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+			// Update and Render additional Platform Windows
+			// (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
+			//  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
+			if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+			{
+				GLFWwindow* backup_current_context = glfwGetCurrentContext();
+				ImGui::UpdatePlatformWindows();
+				ImGui::RenderPlatformWindowsDefault();
+				glfwMakeContextCurrent(backup_current_context);
+			}
+
 			/* Swap front and back buffers */
 			glfwSwapBuffers(window);
 			glfwSwapInterval(1);
 
-			/* Poll for and process events */
-			glfwPollEvents();
 		}
 	}
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 	glfwTerminate();
 	return 0;
 }
