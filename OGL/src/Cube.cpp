@@ -1,7 +1,7 @@
 #include "Cube.h" 
 
 float positions[] = {
-	// Positions			 // Colors         // Texture Coords
+	// Positions			 // Colors                // Texture Coords
 	// Front face 
 	-50.0f, -50.0f,  50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,  0.0f,  0.0f, -1.0f,
 	 50.0f, -50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  0.0f,  0.0f, -1.0f,
@@ -74,7 +74,7 @@ Cube::~Cube()
 	shader.Unbind();
 	texture.Unbind();
 }
-void Cube::Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view, const glm::vec3& lightPos, const glm::vec3& viewPos)
+void Cube::Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view)
 { 
 	glm::mat4 model = glm::mat4(1.0f); 
 	model = glm::translate(model, position); 
@@ -85,10 +85,20 @@ void Cube::Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view
 	shader.SetUniformMat4f("projection", proj); 
 	shader.SetUniformMat4f("view", view); 
 	shader.SetUniformMat4f("model", model); 
-	shader.Setuniform3f("lightPos", lightPos.x, lightPos.y, lightPos.z);
-	shader.Setuniform3f("viewPos", viewPos.x, viewPos.y, viewPos.z);
-	shader.Setuniform3f("lightColor" , 1.0f, 1.0f, 1.0f);
-	shader.Setuniform4f("u_Color", 1.0f, 1.0f, 1.0f, 1.0f);
+
+	//light properties
+	shader.Setuniform3f("light.position", lightPosition.x, lightPosition.y, lightPosition.z);
+	shader.Setuniform3f("light.ambient", lightAmbient.x, lightAmbient.y, lightAmbient.z);
+	shader.Setuniform3f("light.diffuse", lightDiffuse.x, lightDiffuse.y, lightDiffuse.z);
+	shader.Setuniform3f("light.specular", lightSpecular.x, lightSpecular.y, lightSpecular.z);
+	shader.Setuniform3f("viewPosition", viewPosition.x, viewPosition.y, lightAmbient.z);
+
+	//material properties
+	shader.Setuniform3f("material.ambient", materialAmbient.x, materialAmbient.y, materialAmbient.z);
+	shader.Setuniform3f("material.diffuse", materialDiffuse.x, materialDiffuse.y, materialDiffuse.z);
+	shader.Setuniform3f("material.specular", materialSpecular.x, materialSpecular.y, materialSpecular.z);
+	shader.Setuniform1f("material.shininess", materialShininess);
+
 	renderer.Draw(va, ebo, shader);
 }
 void Cube::Update()
@@ -112,4 +122,21 @@ void Cube::SetRotation(const glm::vec3& rot)
 void Cube::SetScale(const glm::vec3& scale)
 {
 	this->scale = scale;
+}
+
+void Cube::SetMaterial(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, float shininess)
+{
+	materialAmbient = ambient;
+	materialDiffuse = diffuse; 
+	materialSpecular = specular; 
+	materialShininess = shininess;
+}
+
+void Cube::SetLightProperties(const glm::vec3& lightPos, const glm::vec3& lightAmbient, const glm::vec3& lightDiffuse, const glm::vec3& lightSpecular, const glm::vec3& viewPos)
+{
+	this->lightPosition = lightPos;
+	this->lightAmbient = lightAmbient;
+	this->lightDiffuse = lightDiffuse;
+	this->lightSpecular = lightSpecular;
+	this->viewPosition = viewPos;
 }

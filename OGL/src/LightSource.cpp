@@ -82,7 +82,7 @@ void LightSource::Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat
 	shader.SetUniformMat4f("projection", proj); 
 	shader.SetUniformMat4f("view", view); 
 	shader.SetUniformMat4f("model", model); 
-	//shader.Setuniform4f("u_Color", 1.0f, 1.0f, 1.0f, 1.0f);
+	shader.Setuniform3f("color", color.r, color.g, color.b);
 	renderer.Draw(va, ebo, shader);
 }
 void LightSource::Update()
@@ -102,6 +102,11 @@ void LightSource::SetRotation(const glm::vec3& rot)
 void LightSource::SetScale(const glm::vec3& scale)
 {
 	this->scale = scale;
+}
+
+void LightSource::SetColor(const glm::vec3& color)
+{
+	this->color = color;
 }
 
 glm::vec3 LightSource::GetPosition() const

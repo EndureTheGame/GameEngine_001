@@ -17,6 +17,8 @@ private:
 	glm::vec3 position;
 	glm::vec3 rotation;
 	glm::vec3 scale;
+	glm::vec3 color;
+
 public:
 	LightSource(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale);
 	~LightSource();
@@ -27,6 +29,7 @@ public:
 	void SetPosition(const glm::vec3& pos);
 	void SetRotation(const glm::vec3& rot);
 	void SetScale(const glm::vec3& scale);
+	void SetColor(const glm::vec3& color);
 
 	//Getters
 	glm::vec3 GetPosition() const;
