@@ -83,6 +83,12 @@
     <Image Include="res\container.jpg">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="res\container2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\container3.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\vendor\stb_image\stb_image.h">

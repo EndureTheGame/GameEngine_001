@@ -18,6 +18,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include "imgui_internal.h"
 
 #include "glm/glm.hpp"
 #include <glm/ext/matrix_clip_space.hpp>
@@ -26,6 +27,7 @@
 
 
 
+void SetupDockSpace();
 void processInput(GLFWwindow* window, Camera& camera, float deltaTime);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
@@ -89,22 +91,30 @@ int main(void)
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
 
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
 	io.ConfigViewportsNoAutoMerge = true;
 	io.ConfigViewportsNoTaskBarIcon = true;
+
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
 	//ImGui::StyleColorsLight();
+
+
+
+
 
 	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
 	ImGuiStyle& style = ImGui::GetStyle();
 	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 	{
 		style.WindowRounding = 0.0f;
-		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 0.3f;
+		style.Colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.3f); // Setting alpha to 0.3 for slight transparency
+		style.Colors[ImGuiCol_ChildBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.3f); // For child windows
+		style.Colors[ImGuiCol_PopupBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.3f); // For pop-ups
 	}
 
 	// Setup Platform/Renderer backends
@@ -114,7 +124,7 @@ int main(void)
 
 
 
-	glDisable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST); 
 	// Enable depth testing
 	glEnable(GL_DEPTH_TEST);
 
@@ -148,7 +158,7 @@ int main(void)
 		glm::vec3 materialAmbient = glm::vec3(0.2f, 0.2f, 0.2f);
 		glm::vec3 materialDiffuse = glm::vec3(0.5f, 0.5f, 0.5f);
 		glm::vec3 materialSpecular = glm::vec3(1.0f, 1.0f, 1.0f);
-		float materialShininess = 32.0f;
+		float materialShininess = 256.0f;
 
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(window))
@@ -182,7 +192,7 @@ int main(void)
 			glm::vec3 viewPos = camera.Position;
 			for (auto& cube : cube) {
 				cube.SetLightProperties(glm::vec3(lightPosition), lightAmbient, lightDiffuse, lightSpecular, viewPos);
-				cube.SetMaterial(materialAmbient, materialDiffuse, materialSpecular, materialShininess);
+				cube.SetMaterial(materialShininess);
 				cube.Draw(renderer, proj, view);
 			}
 			lightPosition = glm::vec3(greenValue, 0, BlueValue);
@@ -194,6 +204,9 @@ int main(void)
 			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
+			
+			SetupDockSpace();
+
 			// ImGui: Control light color 
 			ImGui::Begin("Light Control"); 
 			ImGui::ColorEdit3("Light Color", (float*)&lightDiffuse); 
@@ -286,3 +299,32 @@ static void glfw_error_callback(int error, const char* description)
 {
 	fprintf(stderr, "GLFW Error %d: %s\n", error, description);
 }
+
+
+void SetupDockSpace() {
+	ImGuiIO& io = ImGui::GetIO();
+	ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(viewport->Pos);
+	ImGui::SetNextWindowSize(viewport->Size);
+	ImGui::SetNextWindowViewport(viewport->ID);
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+	window_flags |= ImGuiWindowFlags_NoBackground;
+
+	ImGui::Begin("DockSpace Demo", nullptr, window_flags);
+	ImGui::PopStyleVar(2);
+
+	ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+	ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+
+	ImGui::End();
+}
+
+

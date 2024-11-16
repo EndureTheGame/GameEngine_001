@@ -15,14 +15,15 @@ class Cube
 		ElementBuffer ebo; 
 		Shader shader; 
 		Texture texture; 
+		Texture texture2;
 
 		glm::vec3 position; 
 		glm::vec3 rotation; 
 		glm::vec3 scale; 
 
-		glm::vec3 materialAmbient; 
-		glm::vec3 materialDiffuse; 
-		glm::vec3 materialSpecular; 
+		//glm::vec3 materialAmbient; 
+		//glm::vec3 materialDiffuse; 
+		//glm::vec3 materialSpecular; 
 		float materialShininess; 
 		
 		glm::vec3 lightPosition; 
@@ -41,7 +42,7 @@ class Cube
 		void SetPosition(const glm::vec3& pos); 
 		void SetRotation(const glm::vec3& rot); 
 		void SetScale(const glm::vec3& scale);
-		void SetMaterial(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, float shininess);
+		void SetMaterial(float shininess);
 		void SetLightProperties(const glm::vec3& lightPos, const glm::vec3& lightAmbient, const glm::vec3& lightDiffuse, const glm::vec3& lightSpecular, const glm::vec3& viewPos);
 
 		//Getters 

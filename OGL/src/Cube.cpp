@@ -55,7 +55,7 @@ unsigned int indices[] = {
 	22, 23, 20
 };
 
-Cube::Cube(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale) : position(pos), rotation(rot), scale(scale), vb(positions, sizeof(positions)), ebo(indices, sizeof(indices)), shader("Shaders/BasicShader.shader"), texture("res/container.jpg")
+Cube::Cube(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale) : position(pos), rotation(rot), scale(scale), vb(positions, sizeof(positions)), ebo(indices, sizeof(indices)), shader("Shaders/BasicShader.shader"), texture("res/container2.png"), texture2("res/container3.png")
 {
 	VertexBufferLayout layout; 
 	layout.Push<float>(3); // Positions 
@@ -63,7 +63,8 @@ Cube::Cube(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale) :
 	layout.Push<float>(2); // Texture Coords 
 	layout.Push<float>(3); // Normals
 	va.addBuffer(vb, layout); 
-	texture.Bind(); 
+	texture.Bind(0); 
+	texture2.Bind(1);
 	shader.Bind();
 }
 Cube::~Cube()
@@ -73,6 +74,7 @@ Cube::~Cube()
 	ebo.Unbind();
 	shader.Unbind();
 	texture.Unbind();
+	texture2.Unbind();
 }
 void Cube::Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view)
 { 
@@ -81,7 +83,8 @@ void Cube::Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view
 	model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f)); 
 	model = glm::scale(model, scale); 
 	shader.Bind();
-	texture.Bind();
+	texture.Bind(0);
+	texture2.Bind(1);
 	shader.SetUniformMat4f("projection", proj); 
 	shader.SetUniformMat4f("view", view); 
 	shader.SetUniformMat4f("model", model); 
@@ -94,9 +97,9 @@ void Cube::Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view
 	shader.Setuniform3f("viewPosition", viewPosition.x, viewPosition.y, lightAmbient.z);
 
 	//material properties
-	shader.Setuniform3f("material.ambient", materialAmbient.x, materialAmbient.y, materialAmbient.z);
-	shader.Setuniform3f("material.diffuse", materialDiffuse.x, materialDiffuse.y, materialDiffuse.z);
-	shader.Setuniform3f("material.specular", materialSpecular.x, materialSpecular.y, materialSpecular.z);
+	//shader.Setuniform3f("material.ambient", materialAmbient.x, materialAmbient.y, materialAmbient.z);
+	shader.Setuniform1i("material.texture_diffuse", 0);
+	shader.Setuniform1i("material.texture_specular",1);
 	shader.Setuniform1f("material.shininess", materialShininess);
 
 	renderer.Draw(va, ebo, shader);
@@ -124,11 +127,8 @@ void Cube::SetScale(const glm::vec3& scale)
 	this->scale = scale;
 }
 
-void Cube::SetMaterial(const glm::vec3& ambient, const glm::vec3& diffuse, const glm::vec3& specular, float shininess)
+void Cube::SetMaterial(float shininess)
 {
-	materialAmbient = ambient;
-	materialDiffuse = diffuse; 
-	materialSpecular = specular; 
 	materialShininess = shininess;
 }
 
