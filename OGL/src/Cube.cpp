@@ -1,37 +1,37 @@
 #include "Cube.h" 
 
 float positions[] = {
-	// Positions			 // Colors                // Texture Coords		// Normals
+	// Positions			 // Colors             // Texture Coords// Normals
 	// Front face 
-	-50.0f, -50.0f,  50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,  	0.0f, 0.0f, 1.0f,
-	 50.0f, -50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  	0.0f, 0.0f, 1.0f,
-	 50.0f,  50.0f,  50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,  	0.0f, 0.0f, 1.0f,
-	-50.0f,  50.0f,  50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,  	0.0f, 0.0f, 1.0f,
-	// Back face
-	-50.0f, -50.0f, -50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,  	0.0f, 0.0f, -1.0f,
-	 50.0f, -50.0f, -50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  	0.0f, 0.0f, -1.0f,
-	 50.0f,  50.0f, -50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,  	0.0f, 0.0f, -1.0f,
-	-50.0f,  50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,  	0.0f, 0.0f, -1.0f,
-	// Left face
-	-50.0f, -50.0f, -50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
-	-50.0f, -50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  -1.0f, 0.0f, 0.0f,
-	-50.0f,  50.0f,  50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
-	-50.0f,  50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,  -1.0f, 0.0f, 0.0f,
-	// Right face
-	 50.0f, -50.0f, -50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,   1.0f, 0.0f, 0.0f,
-	 50.0f, -50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  	1.0f, 0.0f, 0.0f,
-	 50.0f,  50.0f,  50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,  	1.0f, 0.0f, 0.0f,
-	 50.0f,  50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,  	1.0f, 0.0f, 0.0f,
-	 // Top face
-	-50.0f,  50.0f,  50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,  	0.0f, 1.0f, 0.0f,
-	 50.0f,  50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  	0.0f, 1.0f, 0.0f,
-	 50.0f,  50.0f, -50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,  	0.0f, 1.0f, 0.0f,
-	-50.0f,  50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,  	0.0f, 1.0f, 0.0f,
-	// Bottom face
-    -50.0f, -50.0f,  50.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,	0.0f,-1.0f, 0.0f,
-	 50.0f, -50.0f,  50.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  	0.0f,-1.0f, 0.0f,
-	 50.0f, -50.0f, -50.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,  	0.0f,-1.0f, 0.0f,
-    -50.0f, -50.0f, -50.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,  	0.0f,-1.0f, 0.0f
+	-1.0f, -1.0f,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,  	0.0f, 0.0f, 1.0f,
+	 1.0f, -1.0f,  1.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  	0.0f, 0.0f, 1.0f,
+	 1.0f,  1.0f,  1.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,  	0.0f, 0.0f, 1.0f,
+	-1.0f,  1.0f,  1.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,  	0.0f, 0.0f, 1.0f,
+	//Back f1e
+	-1.0f, -1.0f, -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,  	0.0f, 0.0f, -1.0f,
+	 1.0f, -1.0f, -1.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  	0.0f, 0.0f, -1.0f,
+	 1.0f,  1.0f, -1.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,  	0.0f, 0.0f, -1.0f,
+	-1.0f,  1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,  	0.0f, 0.0f, -1.0f,
+	//Left f1e
+	-1.0f, -1.0f, -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,	   -1.0f, 0.0f, 0.0f,
+	-1.0f, -1.0f,  1.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,	   -1.0f, 0.0f, 0.0f,
+	-1.0f,  1.0f,  1.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,     -1.0f, 0.0f, 0.0f,
+	-1.0f,  1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,     -1.0f, 0.0f, 0.0f,
+	//Right ce
+	 1.0f, -1.0f, -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,      1.0f, 0.0f, 0.0f,
+	 1.0f, -1.0f,  1.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  	1.0f, 0.0f, 0.0f,
+	 1.0f,  1.0f,  1.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,  	1.0f, 0.0f, 0.0f,
+	 1.0f,  1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,  	1.0f, 0.0f, 0.0f,
+	 //Top f1e
+	-1.0f,  1.0f,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,  	0.0f, 1.0f, 0.0f,
+	 1.0f,  1.0f,  1.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  	0.0f, 1.0f, 0.0f,
+	 1.0f,  1.0f, -1.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,  	0.0f, 1.0f, 0.0f,
+	-1.0f,  1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,  	0.0f, 1.0f, 0.0f,
+	//Bottom1ace
+	-1.0f, -1.0f,  1.0f,  1.0f, 0.0f, 0.0f, 1.0f,  0.0f, 0.0f,		0.0f,-1.0f, 0.0f,
+	 1.0f, -1.0f,  1.0f,  0.0f, 1.0f, 0.0f, 1.0f,  1.0f, 0.0f,  	0.0f,-1.0f, 0.0f,
+	 1.0f, -1.0f, -1.0f,  0.0f, 0.0f, 1.0f, 1.0f,  1.0f, 1.0f,  	0.0f,-1.0f, 0.0f,
+    -1.0f, -1.0f, -1.0f,  1.0f, 1.0f, 0.0f, 1.0f,  0.0f, 1.0f,  	0.0f,-1.0f, 0.0f
 };
 
 unsigned int indices[] = {
@@ -88,13 +88,34 @@ void Cube::Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view
 	shader.SetUniformMat4f("projection", proj); 
 	shader.SetUniformMat4f("view", view); 
 	shader.SetUniformMat4f("model", model); 
+	shader.Setuniform3f("viewPosition", viewPosition.x, viewPosition.y, lightAmbient.z);
+
+
+	//Directional light properties
+	shader.Setuniform4f("directionalLight.direction", -0.2f, -1.0f, -0.3f, 0.0f);
+	shader.Setuniform4f("directionalLight.ambient", 0.05f, 0.05f, 0.05f, 1.0f);
+	shader.Setuniform4f("directionalLight.diffuse", 0.4f, 0.4f, 0.4f, 1.0f);
+	shader.Setuniform4f("directionalLight.specular", 0.5f, 0.5f, 0.5f, 1.0f);
 
 	//light properties
-	shader.Setuniform3f("light.position", lightPosition.x, lightPosition.y, lightPosition.z);
-	shader.Setuniform3f("light.ambient", lightAmbient.x, lightAmbient.y, lightAmbient.z);
-	shader.Setuniform3f("light.diffuse", lightDiffuse.x, lightDiffuse.y, lightDiffuse.z);
-	shader.Setuniform3f("light.specular", lightSpecular.x, lightSpecular.y, lightSpecular.z);
-	shader.Setuniform3f("viewPosition", viewPosition.x, viewPosition.y, lightAmbient.z);
+	shader.Setuniform4f("pointLight[0].position", 0.0f, 10.0f, 0.0f, 1.0f);
+	shader.Setuniform4f("pointLight[0].ambient",  lightAmbient.x, lightAmbient.y, lightAmbient.z, 1.0f);
+	shader.Setuniform4f("pointLight[0].diffuse",  lightDiffuse.x, lightDiffuse.y, lightDiffuse.z, 1.0f);
+	shader.Setuniform4f("pointLight[0].specular", lightSpecular.x, lightSpecular.y, lightSpecular.z, 1.0f);
+	shader.Setuniform1f("pointLight[0].constant", 1.0f);
+	shader.Setuniform1f("pointLight[0].linear", 0.0014f);
+	shader.Setuniform1f("pointLight[0].quadratic", 0.00007f);
+	//spot light properties
+	shader.Setuniform4f("spotLight.position", lightSpotPosition.x, lightSpotPosition.y, lightSpotPosition.z, 1.0f);
+	shader.Setuniform4f("spotLight.direction", 0.0f, -1.0f, 0.0f, 0.0f);
+	shader.Setuniform4f("spotLight.ambient", 0.05f, 0.05f, 0.05f, 1.0f);
+	shader.Setuniform4f("spotLight.diffuse", 1.0f, 0.0f, 0.0f, 1.0f);
+	shader.Setuniform4f("spotLight.specular", 1.0f, 1.0f, 1.0f, 1.0f);
+	shader.Setuniform1f("spotLight.constant", 1.0f);
+	shader.Setuniform1f("spotLight.linear", 0.9f);
+	shader.Setuniform1f("spotLight.quadratic", 0.82f);
+	shader.Setuniform1f("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+	shader.Setuniform1f("spotLight.outerCutOff", glm::cos(glm::radians(17.5f)));
 
 	//material properties
 	//shader.Setuniform3f("material.ambient", materialAmbient.x, materialAmbient.y, materialAmbient.z);
@@ -132,9 +153,36 @@ void Cube::SetMaterial(float shininess)
 	materialShininess = shininess;
 }
 
-void Cube::SetLightProperties(const glm::vec3& lightPos, const glm::vec3& lightAmbient, const glm::vec3& lightDiffuse, const glm::vec3& lightSpecular, const glm::vec3& viewPos)
+void Cube::SetLightProperties(const glm::vec3& lightPosition, const glm::vec3& lightAmbient, const glm::vec3& lightDiffuse, const glm::vec3& lightSpecular, const glm::vec3& viewPos)
 {
-	this->lightPosition = lightPos;
+	this->lightPosition = lightPosition;
+	this->lightAmbient = lightAmbient;
+	this->lightDiffuse = lightDiffuse;
+	this->lightSpecular = lightSpecular;
+	this->viewPosition = viewPos;
+}
+
+void Cube::SetDirectionalLightProperties(const glm::vec3& lightDirection, const glm::vec3& lightAmbient, const glm::vec3& lightDiffuse, const glm::vec3& lightSpecular)
+{
+	this->lightDirection = lightDirection;
+	this->lightAmbient = lightAmbient;
+	this->lightDiffuse = lightDiffuse;
+	this->lightSpecular = lightSpecular;
+}
+
+void Cube::SetPointLightProperties(const glm::vec3& lightPosition, const glm::vec3& lightAmbient, const glm::vec3& lightDiffuse, const glm::vec3& lightSpecular)
+{
+	this->lightPosition = lightPosition;
+	this->lightAmbient = lightAmbient;
+	this->lightDiffuse = lightDiffuse;
+	this->lightSpecular = lightSpecular;
+	
+}
+
+void Cube::SetSpotLightProperties(const glm::vec3& lightPosition, const glm::vec3& lightDirection, const glm::vec3& lightAmbient, const glm::vec3& lightDiffuse, const glm::vec3& lightSpecular, const glm::vec3& viewPos)
+{
+	this->lightPosition = lightPosition;
+	this->lightDirection = lightDirection;
 	this->lightAmbient = lightAmbient;
 	this->lightDiffuse = lightDiffuse;
 	this->lightSpecular = lightSpecular;

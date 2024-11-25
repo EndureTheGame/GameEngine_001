@@ -143,13 +143,14 @@ int main(void)
 		Renderer renderer;
 
 		Cube cube[] = {
-			{glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
-			{glm::vec3(300.0f, 50.0f, -150.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)}
+			{glm::vec3(0.0f, 55.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
+			{glm::vec3(0.0f, 50.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)}
 		};
 		LightSource lightSource(glm::vec3(110.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 		//Light Properties
-		glm::vec3 lightPosition = lightSource.GetPosition();
+		glm::vec3 lightPosition = glm::vec3(-0.2f, -1.0f, -0.3f);
+		glm::vec3 lightSpotPosition = glm::vec3(1.0f, 1.0f, 1.0f);
 		glm::vec3 lightAmbient = glm::vec3(0.2f, 0.2f, 0.2f);
 		glm::vec3 lightDiffuse = glm::vec3(0.5f, 0.5f, 0.5f);
 		glm::vec3 lightSpecular = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -190,12 +191,13 @@ int main(void)
 			glm::mat4 proj = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 1000.0f);
 			glm::mat4 view = camera.GetViewMatrix();
 			glm::vec3 viewPos = camera.Position;
+			glm::vec3 front = camera.Front;
 			for (auto& cube : cube) {
-				cube.SetLightProperties(glm::vec3(lightPosition), lightAmbient, lightDiffuse, lightSpecular, viewPos);
+				//cube.SetLightProperties(lightPosition, lightAmbient, lightDiffuse, lightSpecular, viewPos);
+				cube.SetSpotLightProperties(lightSpotPosition, front, lightAmbient, lightDiffuse, lightSpecular, viewPos);
 				cube.SetMaterial(materialShininess);
 				cube.Draw(renderer, proj, view);
 			}
-			lightPosition = glm::vec3(greenValue, 0, BlueValue);
 			lightSource.SetColor(lightDiffuse);
 			lightSource.SetPosition(lightPosition);
 			lightSource.Draw(renderer, proj, view);
@@ -210,6 +212,12 @@ int main(void)
 			// ImGui: Control light color 
 			ImGui::Begin("Light Control"); 
 			ImGui::ColorEdit3("Light Color", (float*)&lightDiffuse); 
+			ImGui::End();
+
+			ImGui::Begin("Light Position");
+			ImGui::SliderFloat("X", &lightSpotPosition.x, -100.0f, 100.0f);
+			ImGui::SliderFloat("Y", &lightSpotPosition.y, -100.0f, 100.0f);
+			ImGui::SliderFloat("Z", &lightSpotPosition.z, -100.0f, 100.0f);
 			ImGui::End();
 
 			ImGui::ShowDemoWindow(); // Show demo window! :)
