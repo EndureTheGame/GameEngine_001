@@ -98,7 +98,7 @@ void Cube::Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view
 	shader.Setuniform4f("directionalLight.specular", 0.5f, 0.5f, 0.5f, 1.0f);
 
 	//light properties
-	shader.Setuniform4f("pointLight[0].position", 0.0f, 10.0f, 0.0f, 1.0f);
+	shader.Setuniform4f("pointLight[0].position", lightPosition.x, lightPosition.y, lightPosition.z, 1.0f);
 	shader.Setuniform4f("pointLight[0].ambient",  lightAmbient.x, lightAmbient.y, lightAmbient.z, 1.0f);
 	shader.Setuniform4f("pointLight[0].diffuse",  lightDiffuse.x, lightDiffuse.y, lightDiffuse.z, 1.0f);
 	shader.Setuniform4f("pointLight[0].specular", lightSpecular.x, lightSpecular.y, lightSpecular.z, 1.0f);
@@ -107,13 +107,13 @@ void Cube::Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view
 	shader.Setuniform1f("pointLight[0].quadratic", 0.00007f);
 	//spot light properties
 	shader.Setuniform4f("spotLight.position", lightSpotPosition.x, lightSpotPosition.y, lightSpotPosition.z, 1.0f);
-	shader.Setuniform4f("spotLight.direction", 0.0f, -1.0f, 0.0f, 0.0f);
+	shader.Setuniform4f("spotLight.direction", lightSpotDirection.x, lightSpotDirection.y, lightSpotDirection.z, 0.0f);
 	shader.Setuniform4f("spotLight.ambient", 0.05f, 0.05f, 0.05f, 1.0f);
 	shader.Setuniform4f("spotLight.diffuse", 1.0f, 0.0f, 0.0f, 1.0f);
 	shader.Setuniform4f("spotLight.specular", 1.0f, 1.0f, 1.0f, 1.0f);
 	shader.Setuniform1f("spotLight.constant", 1.0f);
-	shader.Setuniform1f("spotLight.linear", 0.9f);
-	shader.Setuniform1f("spotLight.quadratic", 0.82f);
+	shader.Setuniform1f("spotLight.linear", 0.09f);
+	shader.Setuniform1f("spotLight.quadratic", 0.032f);
 	shader.Setuniform1f("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
 	shader.Setuniform1f("spotLight.outerCutOff", glm::cos(glm::radians(17.5f)));
 
