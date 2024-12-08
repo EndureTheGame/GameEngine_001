@@ -1,10 +1,23 @@
 #include "Texture.h"
 #include "stb_image.h"
 
-Texture::Texture(const std::string& path) : m_RendererID(0), m_FilePath(path), m_LocalBuffer(nullptr), m_Width(0), m_Height(0), m_BPP(0)
+Texture::Texture(const std::string& path, const std::string& typeName) : m_RendererID(0), m_FilePath(path), m_LocalBuffer(nullptr), m_Width(0), m_Height(0), m_BPP(0), m_TypeName(typeName)
 {
 	stbi_set_flip_vertically_on_load(true);
 	m_LocalBuffer = stbi_load(path.c_str(), &m_Width, &m_Height, &m_BPP, 4);
+
+	GLenum fomat = GL_RGBA;
+	if (m_LocalBuffer) {
+		if (m_BPP == 1) {
+			fomat = GL_RED;
+		}
+		else if (m_BPP == 3) {
+			fomat = GL_RGB;
+		}
+		else if (m_BPP == 4)
+		{
+			fomat = GL_RGBA;
+		}
 
 	GlCall(glGenTextures(1, &m_RendererID));
 	GlCall(glBindTexture(GL_TEXTURE_2D, m_RendererID));
@@ -16,6 +29,10 @@ Texture::Texture(const std::string& path) : m_RendererID(0), m_FilePath(path), m
 
 	GlCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Width, m_Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, m_LocalBuffer));
 	GlCall(glGenerateMipmap(GL_TEXTURE_2D));
+	}
+	else {
+		std::cout << "Failed to load texture" << std::endl;
+	}
 
 	if (m_LocalBuffer)
 		stbi_image_free(m_LocalBuffer);

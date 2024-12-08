@@ -190,9 +190,11 @@ vec4 CalculateSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir
 	vec3 reflectDir = reflect(-lightDir, normal);
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess); 
 	vec3 specular = light.specular.xyz * spec * texture(material.texture_specular, texCor).rgb;
+
 	ambient *= attenuation * intensity; 
 	diffuse *= attenuation * intensity; 
 	specular *= attenuation * intensity; 
+
 	return vec4(ambient + diffuse + specular, 1.0);
 };
 

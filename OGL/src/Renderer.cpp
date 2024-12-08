@@ -22,7 +22,7 @@ bool GlLogCall(const char* function, const char* file, int line)
 
 void Renderer::Draw(const VertexArray& vao, const ElementBuffer& ebo, const Shader& shader) const
 {
-	shader.Bind();
+	//shader.Bind();
 	vao.Bind();
 	ebo.Bind();
 	GlCall(glDrawElements(GL_TRIANGLES, ebo.GetCount(), GL_UNSIGNED_INT, nullptr));

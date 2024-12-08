@@ -14,6 +14,7 @@
 #include "Camera.h"
 #include "Cube.h"
 #include "LightSource.h"
+#include "Model.h"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -161,6 +162,8 @@ int main(void)
 		glm::vec3 materialSpecular = glm::vec3(1.0f, 1.0f, 1.0f);
 		float materialShininess = 256.0f;
 
+		Model model("/Dev/GAPI/OGL/res/Survival_BackPack_2.fbx");
+
 		/* Loop until the user closes the window */
 		while (!glfwWindowShouldClose(window))
 		{
@@ -193,14 +196,16 @@ int main(void)
 			glm::vec3 viewPos = camera.Position;
 			glm::vec3 front = camera.Front;
 			for (auto& cube : cube) {
-				//cube.SetLightProperties(lightPosition, lightAmbient, lightDiffuse, lightSpecular, viewPos);
-				cube.SetSpotLightProperties(lightSpotPosition, front, lightAmbient, lightDiffuse, lightSpecular, viewPos);
+				cube.SetLightProperties(lightPosition, lightAmbient, lightDiffuse, lightSpecular, viewPos);
+				cube.SetSpotLightProperties(camera.Position, -front, glm::vec3(0.3f, 0.3f, 0.3f), glm::vec3(1.0f, 0.0f, 1.0f), lightSpecular);
 				cube.SetMaterial(materialShininess);
 				cube.Draw(renderer, proj, view);
 			}
 			lightSource.SetColor(lightDiffuse);
 			lightSource.SetPosition(lightPosition);
 			lightSource.Draw(renderer, proj, view);
+
+			model.Draw(proj, view, viewPos, renderer);
 
 			// Start the Dear ImGui frame
 			ImGui_ImplOpenGL3_NewFrame();

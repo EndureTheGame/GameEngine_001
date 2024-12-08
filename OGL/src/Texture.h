@@ -10,8 +10,9 @@ private:
 	unsigned char* m_LocalBuffer;
 	int m_Width, m_Height, m_BPP;
 public:
-	Texture(const std::string& path);
+	Texture(const std::string& path, const std::string& typeName);
 	~Texture();
+	std::string m_TypeName;
 
 	void Bind(unsigned int slot = 0) const;
 	void Unbind() const;

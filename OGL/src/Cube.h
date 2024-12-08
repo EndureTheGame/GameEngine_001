@@ -65,7 +65,7 @@ class Cube
 		void SetLightProperties(const glm::vec3& lightPosition, const glm::vec3& lightAmbient, const glm::vec3& lightDiffuse, const glm::vec3& lightSpecular, const glm::vec3& viewPos);
 		void SetDirectionalLightProperties(const glm::vec3& lightDirection, const glm::vec3& lightAmbient, const glm::vec3& lightDiffuse, const glm::vec3& lightSpecular);
 		void SetPointLightProperties(const glm::vec3& lightPosition, const glm::vec3& lightAmbient, const glm::vec3& lightDiffuse, const glm::vec3& lightSpecular);
-		void SetSpotLightProperties(const glm::vec3& lightPosition, const glm::vec3& lightDirection, const glm::vec3& lightAmbient, const glm::vec3& lightDiffuse, const glm::vec3& lightSpecular, const glm::vec3& viewPos);
+		void SetSpotLightProperties(const glm::vec3& lightPosition, const glm::vec3& lightDirection, const glm::vec3& lightAmbient, const glm::vec3& lightDiffuse, const glm::vec3& lightSpecular);
 
 
 
