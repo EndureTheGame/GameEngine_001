@@ -1,20 +1,18 @@
+#include <glad.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include <glad.h>
 
 #include <iostream>
-#include <String>
+#include <string>
 #include <fstream>
 #include <sstream>
 
 #include "Renderer.h"
-#include "VertexBufferLayout.h"
-#include "VertexBuffer.h"
-#include "Texture.h"
-#include "Camera.h"
-#include "Cube.h"
-#include "LightSource.h"
-#include "Model.h"
+#include "Scene.h"
+#include "CameraNode.h"
+#include "CubeNode.h"
+#include "LightNode.h"
+#include "Shader.h"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -24,290 +22,221 @@
 #include "glm/glm.hpp"
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
-
-
+#include <glm/gtx/string_cast.hpp>
 
 
 void SetupDockSpace();
-void processInput(GLFWwindow* window, Camera& camera, float deltaTime);
+void processInput(GLFWwindow* window, Camera* camera, float deltaTime);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-static void glfw_error_callback(int error, const char* description);
+
 
 const unsigned int HEIGHT = 1080;
 const unsigned int WIDTH = 1920;
 
-// camera
-Camera camera(glm::vec3(0.0f, 80.0f, -3.0f));
-
 float lastX = WIDTH / 2.0f;
 float lastY = HEIGHT / 2.0f;
 bool firstMouse = true;
-
-float deltaTime = 0.0f;	// Time between current frame and last frame
-float lastFrame = 0.0f; // Time of last frame
-
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
 bool stopCamera = false;
+Camera* camera = nullptr;
 
-int main(void)
+static void glfw_error_callback(int error, const char* description);
+
+int main()
 {
-	GLFWwindow* window;
-	const char* title = "OpenGL Concepts";
 
-	// initilizing library
-	if (!glfwInit())
-	{
-		return -1;
-	}
+    if (!glfwInit()) return -1;
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow(WIDTH, HEIGHT, title, NULL, NULL);
-	if (!window)
-	{
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
-		return -1;
-	}
+    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "OpenGL Concepts", nullptr, nullptr);
+    if (!window) { std::cerr << "Failed to create GLFW window\n"; glfwTerminate(); return -1; }
 
-	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	glfwSetCursorPosCallback(window, mouse_callback);
-	glfwSetScrollCallback(window, scroll_callback);
-
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
-		std::cout << "Failed to initialize GLAD" << std::endl;
-		return -1;
-	}
-
-	std::cout << glGetString(GL_VERSION) << std::endl;
-
-	// Setup Dear ImGui context
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
-
-	io.ConfigViewportsNoAutoMerge = true;
-	io.ConfigViewportsNoTaskBarIcon = true;
+    glfwMakeContextCurrent(window);
+    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 
-	// Setup Dear ImGui style
-	ImGui::StyleColorsDark();
-	//ImGui::StyleColorsLight();
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        std::cerr << "Failed to initialize GLAD\n";
+        return -1;
+    }
+    
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    std::cout << glGetString(GL_VERSION) << std::endl;
+	
+    Shader shader("res/shaders/Basic.shader");
+
+    // ImGui setup
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init();
+
+    ImGui::GetStyle().Colors[ImGuiCol_DockingEmptyBg].w = 0.0f;
 
 
+    glEnable(GL_DEPTH_TEST);
+
+    // Scene setup
+    camera = new Camera(glm::vec3(0.0f, 60.0f, 10.0f));
+    Scene scene(camera);
+    camera->MovementSpeed = 25.0f;
+
+    auto cube1 = new Cube(glm::vec3(0.0f, 70.0f, 0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
+    auto cube2 = new Cube(glm::vec3(0.0f, 50.0f, 0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
+    auto cubeNode1 = std::make_shared<CubeNode>(cube1);
+    auto cubeNode2 = std::make_shared<CubeNode>(cube2);
+    scene.GetRoot()->AddChild(cubeNode1);
+    scene.GetRoot()->AddChild(cubeNode2);
+
+    auto light = new LightSource(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
+    auto lightNode = std::make_shared<LightNode>(light);
+    scene.GetRoot()->AddChild(lightNode);
+
+    //Light Properties
+    glm::vec3 lightPosition = glm::vec3(0.0f);
+    glm::vec3 lightSpotPosition = glm::vec3(1.0f, 1.0f, 1.0f);
+    glm::vec3 lightAmbient = glm::vec3(0.2f, 0.2f, 0.2f);
+    glm::vec3 lightDiffuse = glm::vec3(0.0f, 0.0f, 1.0f);
+    glm::vec3 lightSpecular = glm::vec3(1.0f, 1.0f, 1.0f);
+
+    float materialShininess = 256.0f;
+
+    while (!glfwWindowShouldClose(window))
+    {
+        glfwPollEvents();
+
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        processInput(window, camera, deltaTime);
+        Renderer::Clear();
+
+		cube1->SetLightProperties(lightPosition, lightAmbient, lightDiffuse, lightSpecular, camera->GetPosition());
+        cube1->SetSpotLightProperties(camera->Position, -camera->Front, glm::vec3(-0.2f, 1.0f, -0.3f), glm::vec3(1.0f, 0.0f, 0.0f), lightSpecular);
+        cube1->SetMaterial(materialShininess);
+
+        cube2->SetLightProperties(lightPosition, lightAmbient, lightDiffuse, lightSpecular, camera->GetPosition());
+        cube2->SetSpotLightProperties(camera->Position, -camera->Front, glm::vec3(-0.2f, 1.0f, -0.3f), glm::vec3(1.0f, 0.0f, 1.0f), lightSpecular);
+        cube2->SetMaterial(materialShininess);
+
+		camera->SetProjection(camera->Zoom, (float)WIDTH / (float)HEIGHT, 0.1f, 1000.0f);
+
+        scene.Update(deltaTime);
+        scene.Render();
+
+        // ImGui frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        SetupDockSpace();
+
+        ImGui::Begin("Light Control");
+        ImGui::ColorEdit3("Light Color", (float*)&lightDiffuse);
+        ImGui::End();
+
+        ImGui::Begin("Light Position");
+        ImGui::SliderFloat("X", &lightPosition.x, -100.0f, 100.0f);
+        ImGui::SliderFloat("Y", &lightPosition.y, -100.0f, 100.0f);
+        ImGui::SliderFloat("Z", &lightPosition.z, -100.0f, 100.0f);
+        ImGui::End();
+
+        ImGui::Begin("Scene Graph Debug");
+        ImGui::Text("Root Children: %zu", scene.GetRoot()->GetChildren().size());
+        for (size_t i = 0; i < scene.GetRoot()->GetChildren().size(); ++i) {
+            ImGui::Text("Child %zu: %s", i, typeid(*scene.GetRoot()->GetChildren()[i]).name());
+        }
+        static bool wireframe = false;
+        ImGui::Checkbox("Wireframe Mode", &wireframe);
+        glPolygonMode(GL_FRONT_AND_BACK, wireframe ? GL_LINE : GL_FILL);
 
 
-
-	// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
-	ImGuiStyle& style = ImGui::GetStyle();
-	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-	{
-		style.WindowRounding = 0.0f;
-		style.Colors[ImGuiCol_WindowBg].w = 0.3f;
-		style.Colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.3f); // Setting alpha to 0.3 for slight transparency
-		style.Colors[ImGuiCol_ChildBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.3f); // For child windows
-		style.Colors[ImGuiCol_PopupBg] = ImVec4(0.0f, 0.0f, 0.0f, 0.3f); // For pop-ups
-	}
-
-	// Setup Platform/Renderer backends
-	ImGui_ImplGlfw_InitForOpenGL(window, true);          // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
-	ImGui_ImplOpenGL3_Init();
+        ImGui::End();
 
 
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        {
+            GLFWwindow* backup = glfwGetCurrentContext();
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault();
+            glfwMakeContextCurrent(backup);
+        }
 
-	glEnable(GL_DEPTH_TEST); 
-	// Enable depth testing
-	glEnable(GL_DEPTH_TEST);
+        glfwSwapBuffers(window);
+        glfwSwapInterval(1);
+    }
 
-
-	{
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		//glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200.0f, 0.0, 0.0f));
-		//Its calculated in reverse order/or from right to left due to how its laid out in memory.
-		//glm::mat4 mvp = proj * view * model;
-		//shader.SetUniformMat4f("u_MVP", mvp);
-
-
-		// Initialize the camera
-		camera.MovementSpeed = 25.0f;
-
-		Renderer renderer;
-
-		Cube cube[] = {
-			{glm::vec3(0.0f, 55.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)},
-			{glm::vec3(0.0f, 50.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)}
-		};
-		LightSource lightSource(glm::vec3(110.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-
-		//Light Properties
-		glm::vec3 lightPosition = glm::vec3(-0.2f, -1.0f, -0.3f);
-		glm::vec3 lightSpotPosition = glm::vec3(1.0f, 1.0f, 1.0f);
-		glm::vec3 lightAmbient = glm::vec3(0.2f, 0.2f, 0.2f);
-		glm::vec3 lightDiffuse = glm::vec3(0.5f, 0.5f, 0.5f);
-		glm::vec3 lightSpecular = glm::vec3(1.0f, 1.0f, 1.0f);
-
-		//material properties
-		glm::vec3 materialAmbient = glm::vec3(0.2f, 0.2f, 0.2f);
-		glm::vec3 materialDiffuse = glm::vec3(0.5f, 0.5f, 0.5f);
-		glm::vec3 materialSpecular = glm::vec3(1.0f, 1.0f, 1.0f);
-		float materialShininess = 256.0f;
-
-		Model model("/Dev/GAPI/OGL/res/Survival_BackPack_2.fbx");
-
-		/* Loop until the user closes the window */
-		while (!glfwWindowShouldClose(window))
-		{
-
-			/* Poll for and process events */
-			glfwPollEvents();
-
-			/* Process input */
-			float currentFrame = glfwGetTime();
-			deltaTime = currentFrame - lastFrame;
-			lastFrame = currentFrame;
-			processInput(window, camera, deltaTime);
-
-			/* Render here */
-			renderer.Clear();
-
-			// Rendering
-			// (Your code calls glfwSwapBuffers() etc.)
-			float timeValue = glfwGetTime();
-			float greenValue = 200.0f * sin(glfwGetTime());
-			float redValue = -0.3f;	
-			float BlueValue = 150.0f * cos(glfwGetTime());
-
-			//shader.Setuniform1i("u_Texture", 0);
-			const float radius = 100.0f;
-			float camX = sin(glfwGetTime()) * radius;
-			float camZ = cos(glfwGetTime()) * radius;
-			glm::mat4 proj = glm::perspective(glm::radians(camera.Zoom), (float)WIDTH / (float)HEIGHT, 0.1f, 1000.0f);
-			glm::mat4 view = camera.GetViewMatrix();
-			glm::vec3 viewPos = camera.Position;
-			glm::vec3 front = camera.Front;
-			for (auto& cube : cube) {
-				cube.SetLightProperties(lightPosition, lightAmbient, lightDiffuse, lightSpecular, viewPos);
-				cube.SetSpotLightProperties(camera.Position, -front, glm::vec3(0.3f, 0.3f, 0.3f), glm::vec3(1.0f, 0.0f, 1.0f), lightSpecular);
-				cube.SetMaterial(materialShininess);
-				cube.Draw(renderer, proj, view);
-			}
-			lightSource.SetColor(lightDiffuse);
-			lightSource.SetPosition(lightPosition);
-			lightSource.Draw(renderer, proj, view);
-
-			model.Draw(proj, view, viewPos, renderer);
-
-			// Start the Dear ImGui frame
-			ImGui_ImplOpenGL3_NewFrame();
-			ImGui_ImplGlfw_NewFrame();
-			ImGui::NewFrame();
-			
-			SetupDockSpace();
-
-			// ImGui: Control light color 
-			ImGui::Begin("Light Control"); 
-			ImGui::ColorEdit3("Light Color", (float*)&lightDiffuse); 
-			ImGui::End();
-
-			ImGui::Begin("Light Position");
-			ImGui::SliderFloat("X", &lightSpotPosition.x, -100.0f, 100.0f);
-			ImGui::SliderFloat("Y", &lightSpotPosition.y, -100.0f, 100.0f);
-			ImGui::SliderFloat("Z", &lightSpotPosition.z, -100.0f, 100.0f);
-			ImGui::End();
-
-			ImGui::ShowDemoWindow(); // Show demo window! :)
-
-			ImGui::Render();
-			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-			// Update and Render additional Platform Windows
-			// (Platform functions may change the current OpenGL context, so we save/restore it to make it easier to paste this code elsewhere.
-			//  For this specific demo app we could also call glfwMakeContextCurrent(window) directly)
-			if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-			{
-				GLFWwindow* backup_current_context = glfwGetCurrentContext();
-				ImGui::UpdatePlatformWindows();
-				ImGui::RenderPlatformWindowsDefault();
-				glfwMakeContextCurrent(backup_current_context);
-			}
-
-			/* Swap front and back buffers */
-			glfwSwapBuffers(window);
-			glfwSwapInterval(1);
-
-		}
-	}
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext(); 
-	glfwTerminate();
-	return 0;
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+    glfwTerminate();
+    return 0;
 }
-void processInput(GLFWwindow* window, Camera& camera, float deltaTime)
+void processInput(GLFWwindow* window, Camera* camera, float deltaTime)
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) 
-	{
-		if (!stopCamera) 
-		{ 
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); stopCamera = true; 
-		}
-		else { 
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); stopCamera = false; 
-		}
-	}
-	if (!stopCamera)
-	{
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-			camera.ProcessKeyboard(Camera_Movement::FORWARD, deltaTime);
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-			camera.ProcessKeyboard(Camera_Movement::BACKWARD, deltaTime);
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-			camera.ProcessKeyboard(Camera_Movement::LEFT, deltaTime);
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-			camera.ProcessKeyboard(Camera_Movement::RIGHT, deltaTime);
-		if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS)
-			std::cout << camera.Position.x << " " << camera.Position.y << " " << camera.Position.z << " " << camera.Pitch << std::endl;
-	}
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
+        stopCamera = !stopCamera;
+        glfwSetInputMode(window, GLFW_CURSOR, stopCamera ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+    }
+
+    if (!stopCamera)
+    {
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) camera->ProcessKeyboard(FORWARD, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) camera->ProcessKeyboard(BACKWARD, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) camera->ProcessKeyboard(LEFT, deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) camera->ProcessKeyboard(RIGHT, deltaTime);
+    }
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-	if (!stopCamera) {
-		if (firstMouse)
-		{
-			lastX = xpos;
-			lastY = ypos;
-			firstMouse = false;
-		}
-		float xoffset = xpos - lastX;
-		float yoffset = lastY - ypos;
-		lastX = xpos;
-		lastY = ypos;
-
-		camera.ProcessMouseMovement(xoffset, yoffset);
-	}
+    if (!stopCamera)
+    {
+        if (firstMouse) { lastX = xpos; lastY = ypos; firstMouse = false; }
+        float xoffset = xpos - lastX;
+        float yoffset = lastY - ypos;
+        lastX = xpos;
+        lastY = ypos;
+        if (camera)
+            camera->ProcessMouseMovement(xoffset, yoffset);
+    }
 }
 
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	camera.ProcessMouseScroll(static_cast<float>(yoffset));
+    if (camera)
+        camera->ProcessMouseScroll(static_cast<float>(yoffset));
+
 }
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	// make sure the viewport matches the new window dimensions; note that width and 
 	// height will be significantly larger than specified on retina displays.
-	glViewport(0, 0, width, height);
+    // Calculate aspect ratio and use default values for fov, nearPlane, farPlane
+    float aspectRatio = static_cast<float>(width) / static_cast<float>(height);
+    camera->SetProjection(camera->Zoom, aspectRatio, 0.1f, 100.0f);
+    glViewport(0, 0, width, height);
 }
+
 static void glfw_error_callback(int error, const char* description)
 {
 	fprintf(stderr, "GLFW Error %d: %s\n", error, description);

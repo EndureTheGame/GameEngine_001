@@ -1,4 +1,5 @@
 #include "Cube.h" 
+#include <glm/gtx/string_cast.hpp>
 
 float positions[] = {
 	// Positions			 // Colors             // Texture Coords// Normals
@@ -57,15 +58,15 @@ unsigned int indices[] = {
 
 Cube::Cube(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale) : position(pos), rotation(rot), scale(scale), vb(positions, sizeof(positions)), ebo(indices, sizeof(indices)), shader("Shaders/BasicShader.shader"), texture("res/container2.png", "texture_diffuse"), texture2("res/container3.png", "texture_specular")
 {
+	shader.Bind();
+	texture.Bind(0); 
+	texture2.Bind(1);
 	VertexBufferLayout layout; 
 	layout.Push<float>(3); // Positions 
 	layout.Push<float>(4); // Colors 
 	layout.Push<float>(2); // Texture Coords 
 	layout.Push<float>(3); // Normals
 	va.addBuffer(vb, layout); 
-	texture.Bind(0); 
-	texture2.Bind(1);
-	shader.Bind();
 }
 Cube::~Cube()
 {
@@ -76,36 +77,38 @@ Cube::~Cube()
 	texture.Unbind();
 	texture2.Unbind();
 }
-void Cube::Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view)
-{ 
-	glm::mat4 model = glm::mat4(1.0f); 
-	model = glm::translate(model, position); 
-	model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f)); 
-	model = glm::scale(model, scale); 
+void Cube::Draw(const glm::mat4& model, const glm::mat4& view, const glm::mat4& proj)
+{
 	shader.Bind();
 	texture.Bind(0);
 	texture2.Bind(1);
-	shader.SetUniformMat4f("projection", proj); 
-	shader.SetUniformMat4f("view", view); 
-	shader.SetUniformMat4f("model", model); 
-	shader.Setuniform3f("viewPosition", viewPosition.x, viewPosition.y, lightAmbient.z);
+	
+	std::cout << "Drawing cube at position: " << glm::to_string(position) << std::endl;
+	std::cout << "Directional Light Dir: " << glm::to_string(lightDirection) << std::endl;
 
 
-	//Directional light properties
-	shader.Setuniform4f("directionalLight.direction", -0.2f, -1.0f, -0.3f, 0.0f);
-	shader.Setuniform4f("directionalLight.ambient", 0.05f, 0.05f, 0.05f, 1.0f);
-	shader.Setuniform4f("directionalLight.diffuse", 0.4f, 0.4f, 0.4f, 1.0f);
-	shader.Setuniform4f("directionalLight.specular", 0.5f, 0.5f, 0.5f, 1.0f);
+	shader.SetUniformMat4f("model", model);
+	shader.SetUniformMat4f("view", view);
+	shader.SetUniformMat4f("projection", proj);
 
-	//light properties
-	shader.Setuniform4f("pointLight[0].position", 0.0f, 10.0f, 0.0f, 1.0f);
-	shader.Setuniform4f("pointLight[0].ambient",  lightAmbient.x, lightAmbient.y, lightAmbient.z, 1.0f);
-	shader.Setuniform4f("pointLight[0].diffuse",  lightDiffuse.x, lightDiffuse.y, lightDiffuse.z, 1.0f);
+	shader.Setuniform3f("viewPosition", viewPosition.x, viewPosition.y, viewPosition.z);
+
+	// Directional Light
+	shader.Setuniform4f("directionalLight.direction", lightDirection.x, lightDirection.y, lightDirection.z, 0.0f);
+	shader.Setuniform4f("directionalLight.ambient", lightAmbient.x, lightAmbient.y, lightAmbient.z, 1.0f);
+	shader.Setuniform4f("directionalLight.diffuse", lightDiffuse.x, lightDiffuse.y, lightDiffuse.z, 1.0f);
+	shader.Setuniform4f("directionalLight.specular", lightSpecular.x, lightSpecular.y, lightSpecular.z, 1.0f);
+
+	// Point Light
+	shader.Setuniform4f("pointLight[0].position", lightPosition.x, lightPosition.y, lightPosition.z, 1.0f);
+	shader.Setuniform4f("pointLight[0].ambient", lightAmbient.x, lightAmbient.y, lightAmbient.z, 1.0f);
+	shader.Setuniform4f("pointLight[0].diffuse", lightDiffuse.x, lightDiffuse.y, lightDiffuse.z, 1.0f);
 	shader.Setuniform4f("pointLight[0].specular", lightSpecular.x, lightSpecular.y, lightSpecular.z, 1.0f);
 	shader.Setuniform1f("pointLight[0].constant", 1.0f);
 	shader.Setuniform1f("pointLight[0].linear", 0.0014f);
 	shader.Setuniform1f("pointLight[0].quadratic", 0.00007f);
-	//spot light properties
+
+	// Spot Light
 	shader.Setuniform4f("spotLight.position", lightSpotPosition.x, lightSpotPosition.y, lightSpotPosition.z, 1.0f);
 	shader.Setuniform4f("spotLight.direction", lightSpotDirection.x, lightSpotDirection.y, lightSpotDirection.z, 0.0f);
 	shader.Setuniform4f("spotLight.ambient", lightSpotAmbient.x, lightSpotAmbient.y, lightSpotAmbient.z, 1.0f);
@@ -114,23 +117,31 @@ void Cube::Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view
 	shader.Setuniform1f("spotLight.constant", 1.0f);
 	shader.Setuniform1f("spotLight.linear", 0.09f);
 	shader.Setuniform1f("spotLight.quadratic", 0.032f);
-	shader.Setuniform1f("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
-	shader.Setuniform1f("spotLight.outerCutOff", glm::cos(glm::radians(17.5f)));
+	shader.Setuniform1f("spotLight.cutOff", glm::cos(glm::radians(10.0f)));
+	shader.Setuniform1f("spotLight.outerCutOff", glm::cos(glm::radians(12.5f)));
 
-	//material properties
-	//shader.Setuniform3f("material.ambient", materialAmbient.x, materialAmbient.y, materialAmbient.z);
+	// Material
 	shader.Setuniform1i("material.texture_diffuse", 0);
-	shader.Setuniform1i("material.texture_specular",1);
+	shader.Setuniform1i("material.texture_specular", 1);
 	shader.Setuniform1f("material.shininess", materialShininess);
 
-	renderer.Draw(va, ebo, shader);
+	shader.Setuniform4f("objectColor", objectColor.x, objectColor.y, objectColor.z, objectColor.w);
+
+	Renderer::Draw(va, ebo, shader, model);
 }
+
 void Cube::Update()
 {
 	static float direction = 1.0f;
 	position.x += direction * 0.01f;
 	if (position.x > 0.5f) direction = -5;
 	if (position.x < -0.5f) direction = 5;
+}
+
+void Cube::SetColor(glm::vec4 Color)
+{
+
+	objectColor = Color;
 }
 
 void Cube::SetPosition(const glm::vec3& pos)
@@ -164,6 +175,7 @@ void Cube::SetLightProperties(const glm::vec3& lightPosition, const glm::vec3& l
 
 void Cube::SetDirectionalLightProperties(const glm::vec3& lightDirection, const glm::vec3& lightAmbient, const glm::vec3& lightDiffuse, const glm::vec3& lightSpecular)
 {
+	this->position = lightPosition;
 	this->lightDirection = lightDirection;
 	this->lightAmbient = lightAmbient;
 	this->lightDiffuse = lightDiffuse;
@@ -187,3 +199,14 @@ void Cube::SetSpotLightProperties(const glm::vec3& lightPosition, const glm::vec
 	this->lightSpotDiffuse = lightDiffuse;
 	this->lightSpotSpecular = lightSpecular;
 }
+
+const glm::mat4& Cube::GetTransform() const {
+    static glm::mat4 transform;
+    transform = glm::translate(glm::mat4(1.0f), position);
+    transform = glm::rotate(transform, glm::radians(rotation.x), glm::vec3(1, 0, 0));
+    transform = glm::rotate(transform, glm::radians(rotation.y), glm::vec3(0, 1, 0));
+    transform = glm::rotate(transform, glm::radians(rotation.z), glm::vec3(0, 0, 1));
+    transform = glm::scale(transform, scale);
+    return transform;
+}
+

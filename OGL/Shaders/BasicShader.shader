@@ -95,7 +95,7 @@ in vec3 FragPos;
 
 out vec4 FragColor; 
 
-
+uniform vec3 objectColor;
 uniform vec3 lightPos; 
 uniform vec3 viewPosition; 
 uniform vec3 lightColor;
@@ -126,12 +126,15 @@ void main()
 	} 
 	result += CalculateSpotLight(spotLight, norm, FragPos, viewDir);
 
+	//FragColor = vec4(lightDir * 0.5 + 0.5, 1.0); // visualize light direction
+	//FragColor = vec4(normal * 0.5 + 0.5, 1.0); // visualize normals
+
     FragColor = result;
 };
 
 vec4 CalculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir)
 {
-    vec3 lightDir = normalize(-light.direction.xyz);
+    vec3 lightDir = normalize(light.direction.xyz);
 	
 
 

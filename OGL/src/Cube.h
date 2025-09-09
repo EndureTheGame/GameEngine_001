@@ -21,6 +21,8 @@ class Cube
 		glm::vec3 rotation; 
 		glm::vec3 scale; 
 
+		glm::vec4 objectColor;
+
 		//glm::vec3 materialAmbient; 
 		//glm::vec3 materialDiffuse; 
 		//glm::vec3 materialSpecular; 
@@ -54,7 +56,7 @@ class Cube
 	public: 
 		Cube(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale); 
 		~Cube();
-		void Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view);
+		void Draw(const glm::mat4& model, const glm::mat4& view, const glm::mat4& proj);
 		void Update(); 
 
 		//Setters 
@@ -66,8 +68,8 @@ class Cube
 		void SetDirectionalLightProperties(const glm::vec3& lightDirection, const glm::vec3& lightAmbient, const glm::vec3& lightDiffuse, const glm::vec3& lightSpecular);
 		void SetPointLightProperties(const glm::vec3& lightPosition, const glm::vec3& lightAmbient, const glm::vec3& lightDiffuse, const glm::vec3& lightSpecular);
 		void SetSpotLightProperties(const glm::vec3& lightPosition, const glm::vec3& lightDirection, const glm::vec3& lightAmbient, const glm::vec3& lightDiffuse, const glm::vec3& lightSpecular);
-
-
+		void SetColor(glm::vec4 Color);
+		const glm::mat4& GetTransform() const;
 
 		//Getters 
 		glm::vec3 GetPosition() const; 

@@ -3,6 +3,11 @@
 #include <glad.h>
 #include <vector>
 #include "Renderer.h"
+#include <glad.h>
+#include <vector>
+#include <stdexcept>   // if you want to throw on unknown type
+#include <cstdint>     // for uintptr_t if you use it elsewhere
+
 
 
 struct ElementBufferLayout
@@ -14,14 +19,14 @@ struct ElementBufferLayout
 	{
 		switch (type)
 		{
-			case GL_UNSIGNED_INT: return 4;
-			case GL_FLOAT: return 4;
-			case GL_UNSIGNED_BYTE: return 1;
+		case GL_UNSIGNED_INT:  return 4;
+		case GL_FLOAT:         return 4;
+		case GL_UNSIGNED_BYTE: return 1;
+		default:
+			throw std::runtime_error("Unknown GL type in ElementBufferLayout::GetSizeOfType");
 		}
-		ASSERT(false);
-		return 0;
-	
 	}
+
 };
 
 class VertexBufferLayout

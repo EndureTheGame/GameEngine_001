@@ -1,23 +1,37 @@
 #pragma once
 
-#include <glad.h>
-#include <iostream>
-#include "ElementBuffer.h"
 #include "VertexArray.h"
+#include "ElementBuffer.h"
 #include "Shader.h"
-
-#define ASSERT(x) if (!(x)) __debugbreak();
-#define GlCall(x) GlClearError();\
-x;\
-ASSERT(GlLogCall(#x, __FILE__, __LINE__))
-
-void GlClearError();
-bool GlLogCall(const char* function, const char* file, int line);
-
+#include "RenderCommand.h"
 
 class Renderer
 {
 public:
-	void Draw(const VertexArray& vao, const ElementBuffer& ebo, const Shader& shader) const;
-	void Clear();
+    static void Init() { RenderCommand::Init(); }
+    static void Clear() { RenderCommand::Clear(); }
+
+    static void BeginScene(const glm::mat4& view, const glm::mat4& projection)
+    {
+        s_ViewMatrix = view;
+        s_ProjectionMatrix = projection;
+    }
+
+    static void EndScene() { /* Optional batching or post-processing */ }
+
+    static void Draw(const VertexArray& vao,
+        const ElementBuffer& ebo,
+        Shader& shader,
+        const glm::mat4& model)
+    {
+        shader.Bind();
+        shader.SetUniformMat4f("model", model);
+        shader.SetUniformMat4f("view", s_ViewMatrix);
+        shader.SetUniformMat4f("projection", s_ProjectionMatrix);
+        RenderCommand::DrawIndexed(vao, ebo);
+    }
+
+private:
+    static glm::mat4 s_ViewMatrix;
+    static glm::mat4 s_ProjectionMatrix;
 };

@@ -1,4 +1,5 @@
 #include "LightSource.h" 
+#include "Renderer.h"
 
 float tempPositions[] = {
 	// Positions			 // Colors         // Texture Coords
@@ -71,19 +72,18 @@ LightSource::~LightSource()
 	ebo.Unbind();
 	shader.Unbind();
 }
-void LightSource::Draw(Renderer& renderer, const glm::mat4& proj, const glm::mat4& view)
+void LightSource::Draw()
 { 
-	glm::mat4 model = glm::mat4(1.0f); 
-	model = glm::translate(model, position); 
-	model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f)); 
-	model = glm::scale(model, scale); 
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, position);
+	model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::scale(model, scale);
 
 	shader.Bind();
-	shader.SetUniformMat4f("projection", proj); 
-	shader.SetUniformMat4f("view", view); 
-	shader.SetUniformMat4f("model", model); 
 	shader.Setuniform3f("color", color.r, color.g, color.b);
-	renderer.Draw(va, ebo, shader);
+
+	// Let Renderer handle view/proj
+	Renderer::Draw(va, ebo, shader, model);
 }
 void LightSource::Update()
 {
