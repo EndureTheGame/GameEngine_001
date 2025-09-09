@@ -84,7 +84,6 @@ void Cube::Draw(const glm::mat4& model, const glm::mat4& view, const glm::mat4& 
 	texture2.Bind(1);
 	
 	std::cout << "Drawing cube at position: " << glm::to_string(position) << std::endl;
-	std::cout << "Directional Light Dir: " << glm::to_string(lightDirection) << std::endl;
 
 
 	shader.SetUniformMat4f("model", model);
@@ -128,6 +127,7 @@ void Cube::Draw(const glm::mat4& model, const glm::mat4& view, const glm::mat4& 
 	shader.Setuniform4f("objectColor", objectColor.x, objectColor.y, objectColor.z, objectColor.w);
 
 	Renderer::Draw(va, ebo, shader, model);
+	std::cout << "Directional Light Dir: " << glm::to_string(lightSpotDirection) << std::endl;
 }
 
 void Cube::Update()

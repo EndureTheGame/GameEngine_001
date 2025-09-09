@@ -95,7 +95,7 @@ int main()
     Scene scene(camera);
     camera->MovementSpeed = 25.0f;
 
-    auto cube1 = new Cube(glm::vec3(0.0f, 70.0f, 0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
+    auto cube1 = new Cube(glm::vec3(0.0f, 52.0f, 0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
     auto cube2 = new Cube(glm::vec3(0.0f, 50.0f, 0.0f), glm::vec3(0.0f), glm::vec3(1.0f));
     auto cubeNode1 = std::make_shared<CubeNode>(cube1);
     auto cubeNode2 = std::make_shared<CubeNode>(cube2);
@@ -113,7 +113,7 @@ int main()
     glm::vec3 lightDiffuse = glm::vec3(0.0f, 0.0f, 1.0f);
     glm::vec3 lightSpecular = glm::vec3(1.0f, 1.0f, 1.0f);
 
-    float materialShininess = 256.0f;
+    float materialShininess = 56.0f;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -131,7 +131,7 @@ int main()
         cube1->SetMaterial(materialShininess);
 
         cube2->SetLightProperties(lightPosition, lightAmbient, lightDiffuse, lightSpecular, camera->GetPosition());
-        cube2->SetSpotLightProperties(camera->Position, -camera->Front, glm::vec3(-0.2f, 1.0f, -0.3f), glm::vec3(1.0f, 0.0f, 1.0f), lightSpecular);
+        cube2->SetSpotLightProperties(camera->Position, -camera->Front, glm::vec3(-0.2f, 1.0f, -0.3f), glm::vec3(1.0f, 0.0f, 0.0f), lightSpecular);
         cube2->SetMaterial(materialShininess);
 
 		camera->SetProjection(camera->Zoom, (float)WIDTH / (float)HEIGHT, 0.1f, 1000.0f);
